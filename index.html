@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de-AT"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Datenspuren und digitale Sicherheit</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f2ed;color:#192833;font:1rem/1.55 Inter,"Segoe UI",sans-serif}.wrap{width:min(100% - 2rem,48rem);margin:auto}header{background:#162733;color:white;border-bottom:5px solid #ffdc5e;padding:1.6rem 0}h1,h2,h3,p{margin:0 0 .8rem}h1{font-size:clamp(1.6rem,5vw,2.5rem);line-height:1.12;margin:0}main{padding:clamp(1rem,4vw,2.5rem) 0}.card{background:white;border-radius:1rem;border:1px solid #ccd5db;padding:clamp(1rem,4vw,2rem);box-shadow:0 8px 24px #1627330d}.badge{font-size:.85rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.case,.feedback{background:#edf3f6;border-left:4px solid #54798e;border-radius:.45rem;padding:1rem;margin:1rem 0}.feedback{background:#edf6ef}.feedback[data-score="0"],.feedback[data-score="1"]{background:#fff3d7}fieldset{margin:1rem 0;padding:0;border:0;min-width:0}legend{font-weight:700}.option{display:flex;gap:.65rem;padding:.8rem;border:1px solid #bbc9d3;border-radius:.6rem;margin:.5rem 0;cursor:pointer}.option:has(:checked){background:#fff4c9;border-color:#796000}.option input{flex:none;margin:.3rem 0 0;accent-color:#203946;width:1.1rem;height:1.1rem}button{background:#ffdc5e;color:#162733;border:2px solid #162733;border-radius:.6rem;padding:.65rem 1rem;min-height:44px;font:inherit;font-weight:700;cursor:pointer}:focus-visible{outline:3px solid #176db0;outline-offset:3px}progress{display:block;width:100%;margin:0 0 1.1rem;accent-color:#326f5c}.results{padding:0;list-style:none}.results li{padding:.7rem;border:1px solid #ccd5db;border-radius:.55rem;margin:.5rem 0}.muted,footer{color:#465b69}footer{font-size:.9rem;padding-bottom:1.5rem}summary{cursor:pointer;font-weight:700}details{margin:1rem 0}
+</style>
+<header><div class="wrap"><p class="badge">Praxisübung fürs Webinar</p><h1>Datenspuren und digitale Sicherheit</h1></div></header>
+<main class="wrap"><section id="app" class="card" aria-label="Fragebogen"></section><noscript>Aktiviere JavaScript, um die Übung zu starten.</noscript></main>
+<footer class="wrap">Deine Antworten werden im Browser ausgewertet. Die Übung sendet und speichert keine Antworten. Beim Neuladen beginnt sie von vorne.</footer>
+<script>
+"use strict";
+const topics = [
+ {name:"Datenschutz", tip:"Prüfe bei der nächsten Anmeldung oder App-Freigabe, welche Daten für den konkreten Zweck nötig sind.", cases:[
+ ["Fortbildung anmelden","Ein externes Anmeldeformular verlangt Geburtsdatum und Privatadresse. Der Zweck dieser Angaben bleibt offen.","Wie gehst du vor?",[
+ ["Ich kläre über einen bekannten Kontakt, welche Angaben erforderlich sind.","So kannst du unnötige Datenweitergabe vermeiden."],
+ ["Ich warte ab und prüfe nur, ob die Seite professionell aussieht.","Die Pause schafft Zeit. Das Aussehen erklärt den Zweck der Angaben kaum."],
+ ["Ich fülle alle Felder aus.","Damit gibst du womöglich mehr Daten weiter als nötig."]]],
+ ["Eine Foto-App","Zum Zuschneiden eines einzelnen Bilds verlangt eine App Zugriff auf alle Fotos und Kontakte.","Welche Freigabe passt?",[
+ ["Ich gebe nach Möglichkeit nur das gewünschte Foto frei und verweigere den Kontaktzugriff.","Das einzelne Bild reicht für die Aufgabe."],
+ ["Ich erlaube alle Fotos, aber keine Kontakte.","Die Kontakte bleiben geschützt. Die Fotoauswahl lässt sich je nach Gerät weiter begrenzen."],
+ ["Ich erlaube beides.","Eine Abfrage allein zeigt noch keinen Bedarf für die Daten."]]]]},
+ {name:"Digitaler Fußabdruck", tip:"Sieh dir ein eigenes Profil in der öffentlichen Ansicht an und überprüfe Beiträge, Markierungen und Standortangaben.", cases:[
+ ["Ein Urlaubsfoto","Ein Foto und der Standort-Sticker zeigen, wo du gerade bist. Dein Profil ist öffentlich.","Wie verkleinerst du deine Datenspur?",[
+ ["Ich entferne den Standort, prüfe Bilddetails und poste später für einen begrenzten Kreis.","So verrät der Beitrag weniger über deinen aktuellen Aufenthaltsort."],
+ ["Ich entferne den Sticker und poste sofort öffentlich.","Der Sticker ist weg. Bilddetails und Zeitpunkt können weiterhin Hinweise geben."],
+ ["Ich poste sofort mit Standort.","Damit wird dein aktueller Aufenthaltsort öffentlich erkennbar."]]],
+ ["Ein alter Beitrag","Bei einer Suche nach deinem Namen findest du einen öffentlich zugänglichen Beitrag mit deiner privaten Telefonnummer.","Was ist der sinnvollste erste Schritt?",[
+ ["Ich entferne die Nummer an der Quelle oder bitte die zuständige Stelle darum.","Damit reduzierst du die Sichtbarkeit dort, wo die Nummer veröffentlicht wurde."],
+ ["Ich frage nur die Suchmaschine nach einer Entfernung des Treffers.","Das kann die Auffindbarkeit senken. Der Beitrag kann direkt online bleiben."],
+ ["Ich lösche meinen Suchverlauf.","Das ändert nichts am öffentlichen Beitrag."]]]]},
+ {name:"Social Engineering", tip:"Lege für dringende Aufforderungen einen unabhängigen Prüfweg fest, etwa eine bereits bekannte Telefonnummer oder das direkt geöffnete Portal.", cases:[
+ ["Eine dringende Fortbildungs-E-Mail","Dein Platz soll verfallen, wenn du dich bis Mittag nicht über einen Link in einer E-Mail anmeldest.","Wie prüfst du die Aufforderung?",[
+ ["Ich öffne das bekannte Buchungsportal selbst oder rufe die bekannte Nummer des Veranstalters an.","Damit prüfst du die Aufforderung unabhängig von der Nachricht."],
+ ["Ich prüfe nur den angezeigten Absendernamen.","Ein vertrauter Name ist ein schwacher Hinweis und kann nachgeahmt werden."],
+ ["Ich öffne den Link und melde mich sofort an.","Der Zeitdruck senkt die Chance, dass du den Link vorher prüfst."]]],
+ ["Eine Instagram-Nachricht","Ein vertrautes Profil bittet um deinen Bestätigungscode. Angeblich hilft er bei einer Abstimmung.","Wie reagierst du?",[
+ ["Ich behalte den Code für mich und frage über eine bereits bekannte Nummer nach.","Ein vertrautes Profil kann übernommen worden sein. Der andere Kanal hilft bei der Prüfung."],
+ ["Ich behalte den Code für mich, frage aber im selben Chat nach.","Der Code bleibt geschützt. Die Antwort kommt weiterhin aus demselben möglicherweise übernommenen Konto."],
+ ["Ich gebe den Code weiter, weil ich das Profil kenne.","Ein Bestätigungscode kann die Anmeldung oder Wiederherstellung eines Kontos ermöglichen."]]]]},
+ {name:"Konten und Daten schützen", tip:"Prüfe bei deinem wichtigsten E-Mail-Konto Passwort, zusätzliche Anmeldesicherung und Wiederherstellungsoptionen.", cases:[
+ ["Ein Passwort für mehrere Konten","Ein Shop meldet ein Datenleck. Du nutzt das dort verwendete Passwort auch für dein privates E-Mail-Konto.","Was tust du zuerst?",[
+ ["Ich ersetze das Passwort überall durch jeweils einzigartige Passwörter, beginnend beim Postfach, und aktiviere dort eine zusätzliche Anmeldesicherung.","Über das Postfach lassen sich häufig weitere Konten zurücksetzen. Einzigartige Passwörter begrenzen die Folgen einer Panne."],
+ ["Ich ändere nur das Passwort im betroffenen Shop.","Der Shop-Zugang ist abgesichert. Bei anderen Diensten bleibt das betroffene Passwort gültig."],
+ ["Ich warte auf eine Warnung über einen fremden Login.","Das bekannt gewordene Passwort kann bereits bei anderen Diensten ausprobiert werden."]]],
+ ["Ein auffällig günstiger Onlineshop","Eine Social-Media-Anzeige führt zu einem unbekannten Shop. Die Kopfhörer sind ungewöhnlich günstig und an der Kassa ist nur Vorkasse möglich.","Wie schützt du deine Zahlungs- und Adressdaten?",[
+ ["Ich prüfe Shop-Adresse und Anbieterangaben unabhängig und breche bei ungeklärtem Verdacht ab.","Damit vermeidest du die Übermittlung von Geld und Daten an einen möglichen Fake-Shop."],
+ ["Ich prüfe nur, ob der Browser eine verschlüsselte Verbindung anzeigt.","HTTPS schützt die Übertragung. Auch ein betrügerischer Shop kann HTTPS nutzen."],
+ ["Ich bezahle per Vorkasse, solange das Angebot gilt.","Bei einem Fake-Shop riskierst du Geldverlust und gibst mit der Bestellung Daten weiter."]]],
+ ["Zugangsdaten bereits eingegeben","Du hast das Passwort deines beruflichen Postfachs auf einer möglicherweise gefälschten Seite eingegeben.","Was tust du jetzt?",[
+ ["Ich melde es sofort intern und sichere das Konto über den offiziellen Zugang in Abstimmung mit der zuständigen Stelle.","Die zuständige Stelle kann zusätzlich laufende Sitzungen und mögliche Folgen prüfen."],
+ ["Ich ändere das Passwort über den offiziellen Zugang und melde den Vorfall nicht.","Die Änderung hilft. Eine Meldung ermöglicht weitere Schritte, etwa die Prüfung laufender Sitzungen."],
+ ["Ich lösche die Nachricht und warte ab.","Die eingegebenen Daten können bereits weitergegeben worden sein."]]]]}
+];
+const app = document.querySelector("#app");
+let round = [], last = [], answers = [], step = 0;
+function shuffle(items) {
+ const copy = [...items];
+ for (let i = copy.length - 1; i > 0; i--) {
+   const j = Math.floor(Math.random() * (i + 1));
+   [copy[i], copy[j]] = [copy[j], copy[i]];
+ }
+ return copy;
+}
+function start() {
+ last = topics.map((topic,i) => shuffle(topic.cases.filter(item => item !== last[i]))[0]);
+ round = shuffle(last.map((item,i) => ({item, topic:topics[i]})));
+ answers = [];
+ step = 0;
+ showQuestion();
+}
+function showQuestion() {
+ const {topic,item:[title,scene,question,options]} = round[step];
+ const choices = shuffle(options.map(([label,explanation],i) => ({label,explanation,points:2-i})));
+ app.innerHTML = `<p class="badge">Fall ${step+1} von ${round.length} · ${topic.name}</p>
+ <progress value="${step}" max="${round.length}" aria-label="Beantwortete Fälle"></progress>
+ <h2 tabindex="-1">${title}</h2><p class="case">${scene}</p>
+ <form><fieldset><legend>${question}</legend>
+ ${choices.map(({label},i) => `<label class="option"><input type="radio" required name="choice" value="${i}"><span>${label}</span></label>`).join("")}
+ </fieldset><button>Antwort prüfen</button></form><div id="feedback"></div>`;
+ app.querySelector("h2").focus();
+ const form = app.querySelector("form");
+ form.onsubmit = event => {
+   event.preventDefault();
+   const selected = new FormData(form).get("choice");
+   if (selected === null || answers.length !== step) return;
+   const {label,explanation,points} = choices[Number(selected)];
+   const best = options[0][0];
+   answers.push({topic,title,label,points,best});
+   form.querySelector("fieldset").disabled = true;
+   form.querySelector("button").hidden = true;
+   app.querySelector("progress").value = answers.length;
+   const feedback = app.querySelector("#feedback");
+   feedback.innerHTML = `<div class="feedback" data-score="${points}"><h3 tabindex="-1">${["Riskante Entscheidung","Teilweise hilfreich","Gute Entscheidung"][points]} · ${points} von 2 Punkten</h3>
+   <p>${explanation}</p>${points < 2 ? `<p><strong>Sicherere Wahl</strong> · ${best}</p>` : ""}</div>
+   <button>${step === round.length-1 ? "Zur Auswertung" : "Nächster Fall"}</button>`;
+   feedback.querySelector("h3").focus();
+   feedback.querySelector("button").onclick = () => {
+     step++;
+     if (step < round.length) showQuestion();
+     else showResults();
+   };
+ };
+}
+function showResults() {
+ const total = answers.reduce((sum,answer) => sum+answer.points,0);
+ const review = [...answers].sort((a,b) => a.points-b.points || topics.indexOf(a.topic)-topics.indexOf(b.topic));
+ const weakest = review.filter(answer => answer.points === review[0].points && answer.points < 2);
+ app.innerHTML = `<h2 tabindex="-1">Deine Auswertung</h2><p><strong>${total} von ${round.length*2} Punkten</strong></p>
+ <p class="muted">Die Punkte beziehen sich auf deine Entscheidungen in diesen Übungsfällen.</p>
+ <div class="case"><h3>${weakest.length ? "Deine nächsten Schutzschritte" : "Alle Fälle sicher gelöst"}</h3>
+ ${weakest.length ? `<ul>${weakest.map(({topic}) => `<li>${topic.tip}</li>`).join("")}</ul>` : "<p>Wähle aus den vier Bereichen eine Maßnahme, die du diese Woche umsetzt.</p>"}</div>
+ <ul class="results">${review.map(({topic,points}) => `<li><strong>${topic.name} · ${points}/2</strong><br>${topic.tip}</li>`).join("")}</ul>
+ <details><summary>Meine Entscheidungen nachlesen</summary><ol>${answers.map(({title,label,points,best}) => `<li><strong>${title}</strong><br>${label}${points < 2 ? `<br>Sicherere Wahl · ${best}` : ""}</li>`).join("")}</ol></details>
+ <button>Mit neuen Fällen wiederholen</button>`;
+ app.querySelector("h2").focus();
+ app.querySelector("button").onclick = start;
+}
+app.innerHTML = `<h2>Was würdest du tun?</h2><p>Vier fiktive Fälle aus dem beruflichen und privaten Alltag. Wähle jeweils, wie du reagieren würdest. Nach jeder Entscheidung erhältst du eine kurze Erklärung.</p><p class="muted">Etwa 5–7 Minuten · Ohne Anmeldung</p><button>Übung starten</button>`;
+app.querySelector("button").onclick = start;
+</script></html>
